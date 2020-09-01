@@ -1,0 +1,112 @@
+﻿@model IEnumerable<CTest.Models.Product>
+
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+
+
+<style>
+    a:link {
+        font-style: normal;
+        color: black;
+    }
+
+    a:hover {
+        font-style: normal;
+        color: black;
+    }
+
+    .row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #wgtmsr {
+        width: 150px;
+    }
+
+        #wgtmsr option {
+            width: 150px;
+        }
+</style>
+
+<h2>&nbsp;</h2>
+
+<div style="width: 700px; border: 1px solid grey; padding: 50px;" class="container">
+
+    Product list
+    <div style="width:600px; margin-bottom: 10px;">
+        <div style="border: 1px solid grey; padding: 5px;">
+            &nbsp; &nbsp; &nbsp; Sort By : &nbsp;&nbsp;&nbsp;
+            <select id="wgtmsr" class="ddl">
+                <option value="0">--Select--</option>
+                <option value="price">Price</option>
+                <option value="popularity">Popularity</option>
+            </select>
+            &nbsp; &nbsp; &nbsp;
+            @Html.RadioButton("sort", "asc", new { Checked = "checked" }) ASC
+            @Html.RadioButton("sort", "desc") DESC
+        </div>
+    </div>
+
+    <div id="_PartialView">
+        @Html.Partial("_Filter", Model)
+    </div>
+
+    @section Scripts {
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $(function () {
+
+                    $('.av').each(function () {
+                        var productId = this.innerText;
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Product/Availability",
+                            data: { productId: productId },
+                            datatype: "html",
+                            contentType: 'application/x-www-form-urlencoded',
+                            success: function (data) {
+                                $('#' + productId).text(data);
+                            },
+                            error: function () {
+                                alert("Error occured!!")
+                            }
+                        });
+                    });
+
+                    $(".ddl").change(function () {
+                        event.preventDefault();
+                        var value = $('.ddl option:selected').val();
+                        var type = $("input[name='sort']:checked").val()
+
+                        if (value === "0") {
+                            return;
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Product/Filter",
+                            data: { value: value, type: type },
+                            datatype: "html",
+                            contentType: 'application/x-www-form-urlencoded',
+                            success: function (data) {
+                                $("#_PartialView").html(data);
+                            },
+                            error: function () {
+                                alert("Error occured!!")
+                            }
+                        });
+                    });
+                });
+
+            });
+        </script>
+    }

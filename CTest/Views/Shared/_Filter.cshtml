@@ -1,0 +1,31 @@
+﻿@model IEnumerable<CTest.Models.Product>
+
+
+<div style="width:600px;">
+    <div style="border: 1px solid grey; padding: 15px 5px;">
+
+        @foreach (var item in Model)
+        {
+            <div style="border: 1px solid grey; padding: 5px; margin: 15px;">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="~/Images/@item.Image" class="img-responsive" width="60" height="60" />
+                    </div>
+                    <div class="col-md-6">
+                        <p>@item.Title</p>
+                        <p>@item.Title (@item.Id) @item.Description</p>
+                        <a href="@Url.Action("Details", "Product", new { productId = @item.Id })"><button>More Details</button></a>
+                    </div>
+                    <div class="col-md-4" style="border:1px solid grey; margin-right: 25px; padding: 10px;">
+                        Price : @item.Price EUR <br />
+
+                        Availability:
+                        <label class="av" style="display:none;">@item.Id</label>
+                        <label id="@item.Id">@item.Availability</label>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+</div>

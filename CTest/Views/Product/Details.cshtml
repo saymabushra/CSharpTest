@@ -1,0 +1,103 @@
+﻿@model IEnumerable<CTest.Models.ProductDetail>
+
+
+@{
+    ViewBag.Title = "Details";
+    
+}
+
+
+<style>
+    .row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: left;
+        margin-right: 0px;
+        margin-left: 0px;
+        margin-left: 0px;
+    }
+
+    #wgtmsr {
+        width: 150px;
+    }
+
+        #wgtmsr option {
+            width: 150px;
+        }
+</style>
+
+<h2>&nbsp;</h2>
+
+<div style="width: 700px; border: 1px solid grey; padding: 50px;" class="container">
+
+    Product Details
+
+    <div style="width:600px;">
+        <div style="border: 1px solid grey; padding: 15px 5px;">
+
+            @foreach (var item in Model)
+            {
+                <div style="border: 1px solid grey; padding: 5px; margin: 15px;">
+                    <div class="row">
+                        <div class="col-md-5">
+                            @item.Title
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <img src="~/Images/@item.Image" class="img-responsive" />
+                        </div>
+                        <div class="col-md-6" style="vertical-align: text-top;">
+                            <p>@item.Description</p>
+                        </div>
+                        <div class="col-md-4" style="border:1px solid grey; margin-right: 25px; padding: 10px;">
+                            Price : 
+                            <label class="av" style="display:none;">@item.Id</label>
+                            <label id="@item.Id"></label>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid grey; padding: 5px; margin: 15px;">
+                        <div class="row">
+                            Specifications <br />
+                            @foreach (var item1 in item.Specs)
+                            {
+                                <text> &nbsp; &nbsp; </text> @item1.Spec <br />
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+
+                $(function () {
+
+                    $('.av').each(function () {
+                        var productId = this.innerText;
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Product/Price",
+                            data: { productId: productId },
+                            datatype: "html",
+                            contentType: 'application/x-www-form-urlencoded',
+                            success: function (data) {
+                                $('#' + productId).text(data);
+                            },
+                            error: function () {
+                                alert("Error occured!!")
+                            }
+                        });
+                    });
+                });
+
+            });
+    </script>
+}
